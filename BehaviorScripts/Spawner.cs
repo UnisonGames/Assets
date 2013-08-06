@@ -26,7 +26,9 @@ public class Spawner : MonoBehaviour {
 	public GameObject toughAI;
 	Vector3 trans;
 	Vector3 def;
-	//GameObject[] spawns = new GameObject[]; //future spawns array for keeping track of enemies
+	
+	
+	GameObject[] spawns;
 	
 	
 	//information for spawner
@@ -43,7 +45,6 @@ public class Spawner : MonoBehaviour {
 	
 	//spawn width and height default = 100
 	public int spawnSize = 100;
-	
 	
 	
 	//percentages for spawn chance
@@ -65,6 +66,7 @@ public class Spawner : MonoBehaviour {
 		def.y = 3;
 		trans = def;
 		randPos = 0;
+		spawns = new GameObject[max_AI];
 	
 		
 	}
@@ -75,10 +77,8 @@ public class Spawner : MonoBehaviour {
 		spawnChance = r.Next(0, 100);
 		if(n_AI < min_AI && timeSinceSpawn > minWait){
 			randPos = r.Next(spawnSize);
-			Debug.Log("R1" + randPos);
 			trans.x += (-(spawnSize/2)) + randPos;
 			randPos = r.Next(spawnSize);
-			Debug.Log("R2: " + randPos);
 				trans.z += (-(spawnSize/2)) + randPos;
 			spawn(spawnChance, trans);
 			trans = def;
@@ -92,25 +92,32 @@ public class Spawner : MonoBehaviour {
 				trans = def;	
 			}
 		}
+		
+		n_AI = transform.GetChildCount();
 	}
 	
 	
 	//this takes the random spawn number argument and spawns an enemy based on the random number
 	private void spawn(int spawnNum, Vector3 t){
 		if(spawnNum < chanceEasy){
-			Instantiate(easyAI, t, gameObject.transform.rotation);
+			spawns[n_AI] = (GameObject)Instantiate(easyAI, t, gameObject.transform.rotation);
+			spawns[n_AI].transform.parent = transform;
 			n_AI++;
+			Debug.Log(n_AI);
 			lastSpawnTime = Time.time;
 			spawnTime = r.Next(minWait, maxWait);
 			spawnChance = r.Next(0, 100);
 		}else if(spawnNum > chanceEasy && spawnNum < (100 - chanceTough)){
-			Instantiate(mediumAI, t, gameObject.transform.rotation);
+			spawns[n_AI] = (GameObject)Instantiate(mediumAI, t, gameObject.transform.rotation);
+			spawns[n_AI].transform.parent = transform;
 			n_AI++;
+			Debug.Log(n_AI);
 			lastSpawnTime = Time.time;
 			spawnTime = r.Next(minWait, maxWait);
 			spawnChance = r.Next(0, 100);
 		}else if(spawnNum > (100-chanceTough)){
-			Instantiate(toughAI, t, gameObject.transform.rotation);
+			spawns[n_AI] = (GameObject)Instantiate(toughAI, t, gameObject.transform.rotation);
+			spawns[n_AI].transform.parent = transform;
 			n_AI++;
 			lastSpawnTime = Time.time;
 			spawnTime = r.Next(minWait, maxWait);
