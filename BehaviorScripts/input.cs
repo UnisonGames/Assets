@@ -13,7 +13,6 @@ public class input : MonoBehaviour {
 	}
 	
 	void Update () {
-
 		float rotX = Input.GetAxis("RotateX");
 		float rotY = Input.GetAxis("RotateY");
 	 	theta = (Mathf.Atan2(rotY, rotX) * Mathf.Rad2Deg);

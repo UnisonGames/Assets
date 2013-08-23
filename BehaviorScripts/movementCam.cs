@@ -3,11 +3,13 @@ using System.Collections;
 
 public class movementCam : MonoBehaviour {
 	public float speed = 2.0f;
-	public bool horMove;
-	public bool verMove;
+	public float horBound;
+	public float verBound;
+
+	public GameObject player;
+
 	void Start () {
-		horMove = true;
-		verMove = true;
+		player = GameObject.FindWithTag("Player");
 	}
 	
 	void Update () {
@@ -15,26 +17,14 @@ public class movementCam : MonoBehaviour {
 		float translationX = Input.GetAxis("HorizontalX") * speed;
 		translationX *= Time.deltaTime;
 		translationY *= Time.deltaTime;
-		if(verMove){
-		transform.Translate(0, 0, translationY);
+		if((player.transform.position.z + translationY) <= verBound && (player.transform.position.z + translationY) >= (-1 * verBound)){
+			transform.Translate(0, 0, translationY);
 		}
-		if(horMove){
-		transform.Translate(translationX, 0, 0);
+		if((player.transform.position.x + translationX)  <= horBound && (player.transform.position.x + translationX) >= (-1 * horBound)){
+			transform.Translate(translationX, 0, 0);
 		}
 		
 	}
-void OnCollisionStay(Collision other){
-		if (other.gameObject.CompareTag("HorizontalWall")){
-			horMove = false;
-		}else{
-			horMove = true;	
-	}
-		if (other.gameObject.CompareTag("VerticalWall")){
-			verMove = false;
-		}else{
-			verMove = true;	
-	}
-}
 
 }
 
